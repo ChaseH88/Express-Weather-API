@@ -10,7 +10,10 @@ const {
   getCurrentWeatherData,
   createDummyWeatherData,
 } = require("./api/currentweather");
-const { getFutureWeatherData } = require("./api/future-weather");
+const {
+  getFutureWeatherData,
+  createFutureWeatherData,
+} = require("./api/future-weather");
 
 const app = express();
 const PORT = 4001;
@@ -101,9 +104,11 @@ app.get("/dummy", async ({ query }, res) => {
   try {
     const currentWeather = createDummyWeatherData();
     const location = createDummyLocationData();
+    const futureWeather = createFutureWeatherData();
     res.json({
       location,
       currentWeather,
+      futureWeather,
     });
   } catch (err) {
     console.error(err);
