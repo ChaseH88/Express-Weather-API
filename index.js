@@ -7,12 +7,15 @@ const PORT = 4001;
 
 app.get("/", async ({ query }, res) => {
   const { latitude, longitude } = query;
-  const location = await getLocationData(latitude, longitude);
-  const currentWeather = await getCurrentWeatherData(latitude, longitude);
-  const futureWeather = await getFutureWeatherData(latitude, longitude);
+  const [location, currentWeather, futureWeather] = await Promise.all([
+    getLocationData(latitude, longitude),
+    getCurrentWeatherData(latitude, longitude),
+    getFutureWeatherData(latitude, longitude),
+  ]);
   res.status(200).send({
     location,
-    currentWeather,
+    currentWeather: currentWeather ? currentWeather.data : null,
+    futureWeather: futureWeather ? futureWeather.data : null,
   });
 });
 

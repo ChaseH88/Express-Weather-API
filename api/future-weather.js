@@ -22,56 +22,56 @@ const getFutureWeatherData = async (latitude, longitude) =>
     const response = await axiosInstance.get(
       `forecast/daily?lat=${latitude}&lon=${longitude}&key=${apiKey}`
     );
-    return transformData(response.data.data[0]);
+
+    return transformData(response.data);
   });
 
-const celsiusToFahrenheit = (celsius) => (celsius * 9) / 5 + 32;
+const celsiusToFahrenheit = (celsius) =>
+  Math.round((celsius * 9) / 5 + 32).toFixed(2);
+const centimetersToInches = (valueInCm) =>
+  Math.round(valueInCm / 2.54).toFixed(2);
+const msToMph = (valueInMs) => Math.round(valueInMs * 2.237);
 
 const transformData = (weatherData) => {
-  const result = {};
-  result["feels_like"] = `${Math.round(
-    celsiusToFahrenheit(weatherData.app_temp)
-  )} °F`;
-  result["air_quality_index"] = weatherData.aqi;
-  result["city"] = weatherData.city_name;
-  result["cloud_cover"] = `${weatherData.clouds}%`;
-  result["country"] = weatherData.country_code;
-  result["date_time"] = weatherData.datetime;
-  result["dew_point"] = `${Math.round(
-    celsiusToFahrenheit(weatherData.dewpt)
-  )} °F`;
-  result["direct_horizontal_irradiance"] = weatherData.dhi;
-  result["direct_normal_irradiance"] = weatherData.dni;
-  result["elevation_angle"] = `${weatherData.elev_angle}°`;
-  result["global_horizontal_irradiance"] = weatherData.ghi;
-  result["max_wind_gust_speed"] = `${weatherData.gust} m/s`;
-  result["latitude"] = weatherData.lat;
-  result["longitude"] = weatherData.lon;
-  result["observation_time"] = weatherData.ob_time;
-  result["part_of_day"] = weatherData.pod === "n" ? "Night" : "Day";
-  result["precipitation"] = `${weatherData.precip} mm`;
-  result["pressure"] = `${weatherData.pres} hPa`;
-  result["relative_humidity"] = `${weatherData.rh}%`;
-  result["sea_level_pressure"] = `${weatherData.slp} hPa`;
-  result["snowfall"] = `${weatherData.snow} cm`;
-  result["solar_radiation"] = `${weatherData.solar_rad} W/m²`;
-  result["sources"] = weatherData.sources;
-  result["state"] = weatherData.state_code;
-  result["weather_station"] = weatherData.station;
-  result["sunrise"] = weatherData.sunrise;
-  result["sunset"] = weatherData.sunset;
-  result["temperature"] = `${Math.round(
-    celsiusToFahrenheit(weatherData.temp)
-  )} °F`;
-  result["timezone"] = weatherData.timezone;
-  result["unix_timestamp"] = weatherData.ts;
-  result["uv_index"] = weatherData.uv;
-  result["visibility"] = `${weatherData.vis} km`;
-  result["weather_description"] = weatherData.weather.description;
-  result[
-    "wind_direction"
-  ] = `${weatherData.wind_dir}° ${weatherData.wind_cdir_full}`;
-  result["wind_speed"] = `${weatherData.wind_spd} m/s`;
+  const result = weatherData.data.map((day) => {
+    console.log(day);
+    return {
+      app_max_temp: `${Math.round(celsiusToFahrenheit(day.app_max_temp))} °F`,
+      app_min_temp: `${Math.round(celsiusToFahrenheit(day.app_min_temp))} °F`,
+      cloud_cover: `${day.clouds}%`,
+      clouds_hi: `${day.clouds_hi}%`,
+      clouds_low: `${day.clouds_low}%`,
+      clouds_mid: `${day.clouds_mid}%`,
+      date: day.datetime,
+      dew_point: `${Math.round(celsiusToFahrenheit(day.dewpt))} °F`,
+      high_temp: `${Math.round(celsiusToFahrenheit(day.high_temp))} °F`,
+      low_temp: `${Math.round(celsiusToFahrenheit(day.low_temp))} °F`,
+      max_temp: `${Math.round(celsiusToFahrenheit(day.max_temp))} °F`,
+      min_temp: `${Math.round(celsiusToFahrenheit(day.min_temp))} °F`,
+      moon_phase: `${day.moon_phase}`,
+      moon_phase_lunation: `${day.moon_phase_lunation}`,
+      moonrise: new Date(day.moonrise_ts * 1000).toLocaleString(),
+      moonset: new Date(day.moonset_ts * 1000).toLocaleString(),
+      ozone: `${day.ozone} DU`,
+      pop: `${day.pop}%`,
+      precip: `${centimetersToInches(day.precip)} in`,
+      pressure: `${day.pres} mb`,
+      relative_humidity: `${day.rh}%`,
+      snowfall: `${centimetersToInches(day.snow)} in`,
+      snow_depth: `${centimetersToInches(day.snow_depth)} in`,
+      sunrise: new Date(day.sunrise_ts * 1000).toLocaleString(),
+      sunset: new Date(day.sunset_ts * 1000).toLocaleString(),
+      temp: `${Math.round(celsiusToFahrenheit(day.temp))} °F`,
+      unix_timestamp: day.ts,
+      uv_index: `${day.uv}`,
+      valid_date: day.valid_date,
+      visibility: `${centimetersToInches(day.vis)} in`,
+      weather_description: day.weather?.description || "N/A",
+      wind_direction: `${day.wind_dir}° ${day.wind_cdir_full}`,
+      wind_gust_speed: `${Math.round(msToMph(day.wind_gust_spd))} mph`,
+      wind_speed: `${Math.round(msToMph(day.wind_spd))} mph`,
+    };
+  });
   return result;
 };
 
