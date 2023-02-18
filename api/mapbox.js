@@ -55,9 +55,6 @@ const stateMap = {
   Wyoming: "WY",
 };
 
-const apiKey =
-  "pk.eyJ1IjoiY2hhc2VoODgiLCJhIjoiY2s4MHQxN2JjMGkwYzNlbG44Zm5yNXFnbyJ9.5T_O4eM8FvzMiNXzZm5s9g";
-
 /**
  *
  * @param {number} latitude
@@ -66,7 +63,7 @@ const apiKey =
 const getLocationData = async (latitude, longitude) =>
   withCache(`${latitude},${longitude}`, async () => {
     const response = await axiosMapbox.get(
-      `${longitude},${latitude}.json?access_token=${apiKey}`
+      `${longitude},${latitude}.json?access_token=${process.env.MAPBOX_API_KEY}`
     );
     return transformData(response.data);
   });

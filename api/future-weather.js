@@ -6,8 +6,6 @@ const {
 } = require("../utils/unit-conversion");
 const { axiosWeatherbit } = require("../utils/axios-weatherbit");
 
-const apiKey = "47b4b166bf68465eb7c4695bd5f4e6f5";
-
 /**
  *
  * @param {number} latitude
@@ -16,7 +14,7 @@ const apiKey = "47b4b166bf68465eb7c4695bd5f4e6f5";
 const getFutureWeatherData = async (latitude, longitude) =>
   withCache(`future-weather-${latitude},${longitude}`, async () => {
     const response = await axiosWeatherbit.get(
-      `forecast/daily?lat=${latitude}&lon=${longitude}&key=${apiKey}`
+      `forecast/daily?lat=${latitude}&lon=${longitude}&key=${process.env.WEATHERBIT_API_KEY}`
     );
 
     return transformData(response.data);

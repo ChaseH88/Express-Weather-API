@@ -1,4 +1,3 @@
-const axios = require("axios");
 const { withCache } = require("../utils/with-cache");
 const {
   celsiusToFahrenheit,
@@ -6,8 +5,6 @@ const {
   msToMph,
 } = require("../utils/unit-conversion");
 const { axiosWeatherbit } = require("../utils/axios-weatherbit");
-
-const apiKey = "47b4b166bf68465eb7c4695bd5f4e6f5";
 
 /**
  *
@@ -17,7 +14,7 @@ const apiKey = "47b4b166bf68465eb7c4695bd5f4e6f5";
 const getCurrentWeatherData = async (latitude, longitude) =>
   withCache(`current-weather-${latitude},${longitude}`, async () => {
     const response = await axiosWeatherbit.get(
-      `current?lat=${latitude}&lon=${longitude}&key=${apiKey}`
+      `current?lat=${latitude}&lon=${longitude}&key=${process.env.WEATHERBIT_API_KEY}`
     );
     return transformData(response.data.data[0]);
   });
