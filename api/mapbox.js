@@ -1,5 +1,5 @@
 const axios = require("axios");
-const LRU = require("lru-cache");
+const { withCache } = require("../utils/with-cache");
 
 const stateMap = {
   Alabama: "AL",
@@ -66,37 +66,18 @@ const axiosInstance = axios.create({
 const apiKey =
   "pk.eyJ1IjoiY2hhc2VoODgiLCJhIjoiY2s4MHQxN2JjMGkwYzNlbG44Zm5yNXFnbyJ9.5T_O4eM8FvzMiNXzZm5s9g";
 
-const cacheOptions = { max: 500, maxAge: 1000 * 60 * 60 };
-const cache = new LRU(cacheOptions);
-
 /**
  *
  * @param {number} latitude
  * @param {number} longitude
  */
-const getLocationData = async (latitude, longitude) => {
-  const cacheKey = `${latitude},${longitude}`;
-  const cachedResult = cache.get(cacheKey);
-  if (cachedResult) {
-    console.log(
-      "===================== Fetching from cache ===================== "
-    );
-    return cachedResult;
-  }
-  try {
-    console.log(
-      "===================== Fetching from API ===================== "
-    );
+const getLocationData = async (latitude, longitude) =>
+  withCache(`${latitude},${longitude}`, async () => {
     const response = await axiosInstance.get(
       `${longitude},${latitude}.json?access_token=${apiKey}`
     );
-    const result = transformData(response.data);
-    cache.set(cacheKey, result);
-    return result;
-  } catch (error) {
-    console.log(error);
-  }
-};
+    return transformData(response.data);
+  });
 
 const transformData = (data) => {
   let result = {};
