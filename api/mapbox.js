@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { withCache } = require("../utils/with-cache");
+const { axiosMapbox } = require("../utils/axios-mapbox");
 
 const stateMap = {
   Alabama: "AL",
@@ -54,15 +55,6 @@ const stateMap = {
   Wyoming: "WY",
 };
 
-const axiosInstance = axios.create({
-  baseURL: "https://api.mapbox.com/geocoding/v5/mapbox.places/",
-  method: "get",
-  timeout: 10000,
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-  },
-});
-
 const apiKey =
   "pk.eyJ1IjoiY2hhc2VoODgiLCJhIjoiY2s4MHQxN2JjMGkwYzNlbG44Zm5yNXFnbyJ9.5T_O4eM8FvzMiNXzZm5s9g";
 
@@ -73,7 +65,7 @@ const apiKey =
  */
 const getLocationData = async (latitude, longitude) =>
   withCache(`${latitude},${longitude}`, async () => {
-    const response = await axiosInstance.get(
+    const response = await axiosMapbox.get(
       `${longitude},${latitude}.json?access_token=${apiKey}`
     );
     return transformData(response.data);

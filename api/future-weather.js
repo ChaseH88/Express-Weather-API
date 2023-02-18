@@ -1,14 +1,10 @@
-const axios = require("axios");
 const { withCache } = require("../utils/with-cache");
-
-const axiosInstance = axios.create({
-  baseURL: "https://api.weatherbit.io/v2.0/",
-  method: "get",
-  timeout: 10000,
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-  },
-});
+const {
+  celsiusToFahrenheit,
+  centimetersToInches,
+  msToMph,
+} = require("../utils/unit-conversion");
+const { axiosWeatherbit } = require("../utils/axios-weatherbit");
 
 const apiKey = "47b4b166bf68465eb7c4695bd5f4e6f5";
 
@@ -19,18 +15,12 @@ const apiKey = "47b4b166bf68465eb7c4695bd5f4e6f5";
  */
 const getFutureWeatherData = async (latitude, longitude) =>
   withCache(`future-weather-${latitude},${longitude}`, async () => {
-    const response = await axiosInstance.get(
+    const response = await axiosWeatherbit.get(
       `forecast/daily?lat=${latitude}&lon=${longitude}&key=${apiKey}`
     );
 
     return transformData(response.data);
   });
-
-const celsiusToFahrenheit = (celsius) =>
-  Math.round((celsius * 9) / 5 + 32).toFixed(2);
-const centimetersToInches = (valueInCm) =>
-  Math.round(valueInCm / 2.54).toFixed(2);
-const msToMph = (valueInMs) => Math.round(valueInMs * 2.237);
 
 const transformData = (weatherData) => {
   const result = weatherData.data.map((day) => {
