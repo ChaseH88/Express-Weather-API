@@ -6,7 +6,10 @@ const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("apikeys.db");
 
 const { getLocationData } = require("./api/mapbox");
-const { getCurrentWeatherData } = require("./api/currentweather");
+const {
+  getCurrentWeatherData,
+  createDummyWeatherData,
+} = require("./api/currentweather");
 const { getFutureWeatherData } = require("./api/future-weather");
 
 const app = express();
@@ -82,6 +85,23 @@ app.get("/", async ({ query }, res) => {
       location,
       currentWeather: currentWeather?.data || null,
       futureWeather: futureWeather?.data || null,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving data");
+  }
+});
+
+/**
+ * Dummy endpoint for testing
+ */
+app.get("/dummy", async ({ query }, res) => {
+  const { latitude, longitude } = query;
+  console.log(`latitude: ${latitude}, longitude: ${longitude}`);
+  try {
+    const currentWeather = createDummyWeatherData();
+    res.json({
+      currentWeather,
     });
   } catch (err) {
     console.error(err);
