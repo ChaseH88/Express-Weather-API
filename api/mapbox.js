@@ -1,7 +1,9 @@
-const axios = require("axios");
 const { withCache } = require("../utils/with-cache");
 const { axiosMapbox } = require("../utils/axios-mapbox");
 
+/**
+ * State abbreviations map
+ */
 const stateMap = {
   Alabama: "AL",
   Alaska: "AK",
@@ -56,7 +58,7 @@ const stateMap = {
 };
 
 /**
- *
+ * Gets location data from the Mapbox API
  * @param {number} latitude
  * @param {number} longitude
  */
@@ -68,6 +70,34 @@ const getLocationData = async (latitude, longitude) =>
     return transformData(response.data);
   });
 
+/**
+ * Creates dummy data for testing
+ * @returns
+ */
+const createDummyLocationData = () => {
+  const response = {
+    data: {
+      features: [
+        {
+          id: "address",
+          place_name: "123 Main St, Anytown, USA",
+          text: "123 Main St",
+        },
+        {
+          id: "postcode",
+          place_name: "Anytown, CA 12345, United States",
+        },
+      ],
+    },
+  };
+  return transformData(response.data);
+};
+
+/**
+ * Transforms the data from the Mapbox API into a more usable format
+ * @param {*} data
+ * @returns
+ */
 const transformData = (data) => {
   let result = {};
 
@@ -96,4 +126,5 @@ const transformData = (data) => {
 
 module.exports = {
   getLocationData,
+  createDummyLocationData,
 };

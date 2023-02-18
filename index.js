@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("apikeys.db");
 
-const { getLocationData } = require("./api/mapbox");
+const { getLocationData, createDummyLocationData } = require("./api/mapbox");
 const {
   getCurrentWeatherData,
   createDummyWeatherData,
@@ -100,7 +100,9 @@ app.get("/dummy", async ({ query }, res) => {
   console.log(`latitude: ${latitude}, longitude: ${longitude}`);
   try {
     const currentWeather = createDummyWeatherData();
+    const location = createDummyLocationData();
     res.json({
+      location,
       currentWeather,
     });
   } catch (err) {
