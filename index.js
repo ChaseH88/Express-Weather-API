@@ -4,6 +4,7 @@ const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("apikeys.db");
+const cors = require("cors");
 
 const { getLocationData, createDummyLocationData } = require("./api/mapbox");
 const {
@@ -18,6 +19,12 @@ const { createDummySevereAlertsData } = require("./api/severe-alerts");
 
 const app = express();
 const PORT = 4001;
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // Create the apikeys table if it doesn't exist
 db.run(`CREATE TABLE IF NOT EXISTS apikeys (email TEXT PRIMARY KEY, key TEXT)`);
