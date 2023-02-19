@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const { withCache } = require("../utils/with-cache");
 const {
   celsiusToFahrenheit,
@@ -34,6 +35,7 @@ const createFutureWeatherData = () => {
     date.setDate(date.getDate() + i);
 
     const day = {
+      id: uuidv4(),
       app_max_temp: Math.random() * 40,
       app_min_temp: Math.random() * 40,
       cloud_cover: Math.floor(Math.random() * 100),
@@ -87,6 +89,7 @@ const createFutureWeatherData = () => {
 const transformData = (weatherData) =>
   weatherData.data.map((day) => {
     return {
+      ...day,
       app_max_temp: `${Math.round(celsiusToFahrenheit(day.app_max_temp))} °F`,
       app_min_temp: `${Math.round(celsiusToFahrenheit(day.app_min_temp))} °F`,
       cloud_cover: `${day.clouds}%`,

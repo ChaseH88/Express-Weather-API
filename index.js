@@ -115,6 +115,7 @@ app.get("/dummy", async ({ query }, res) => {
     const futureWeather = createFutureWeatherData();
     const severeAlerts = createDummySevereAlertsData();
     res.json({
+      id: uuidv4(),
       location,
       currentWeather,
       futureWeather,
