@@ -94,8 +94,8 @@ app.get("/", async ({ query }, res) => {
     ]);
     res.json({
       location,
-      currentWeather: currentWeather?.data || null,
-      futureWeather: futureWeather?.data || null,
+      currentWeather: currentWeather || null,
+      futureWeather: futureWeather || null,
     });
   } catch (err) {
     console.error(err);
