@@ -2,13 +2,12 @@ const getDummyWeatherData = async () => {
   return new Promise((resolve) => {
     resolve({
       location: {
-        address:
-          "29150 Lake Forest Boulevard, Daphne, Alabama 36526, United States",
-        addressText: "Lake Forest Boulevard",
-        city: "Daphne",
-        state: "Alabama 36526",
+        address: "123 Lake Road, Alabama 36601, United States",
+        addressText: "Lake Road",
+        city: "Lakeville",
+        state: "Alabama 36601",
         stateAbbr: "AL",
-        displayCityState: "Daphne, Alabama",
+        displayCityState: "Lakeville, Alabama",
       },
       weatherData: [
         {
