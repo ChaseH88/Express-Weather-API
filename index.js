@@ -5,17 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("apikeys.db");
 const cors = require("cors");
-
-const { getLocationData, createDummyLocationData } = require("./api/mapbox");
-const {
-  getCurrentWeatherData,
-  createDummyWeatherData,
-} = require("./api/currentweather");
-const {
-  getFutureWeatherData,
-  createFutureWeatherData,
-} = require("./api/future-weather");
-const { createDummySevereAlertsData } = require("./api/severe-alerts");
+const { getWeatherData, getDummyWeatherData } = require("./api/weather-data");
 
 const app = express();
 const PORT = 4001;
@@ -87,16 +77,8 @@ app.use((req, res, next) => {
 app.get("/", async ({ query }, res) => {
   const { latitude, longitude } = query;
   try {
-    const [location, currentWeather, futureWeather] = await Promise.all([
-      getLocationData(latitude, longitude),
-      getCurrentWeatherData(latitude, longitude),
-      getFutureWeatherData(latitude, longitude),
-    ]);
-    res.json({
-      location,
-      currentWeather: currentWeather || null,
-      futureWeather: futureWeather || null,
-    });
+    const result = await getWeatherData(latitude, longitude);
+    res.json(result);
   } catch (err) {
     console.error(err);
     res.status(500).send("Error retrieving data");
@@ -110,17 +92,8 @@ app.get("/dummy", async ({ query }, res) => {
   const { latitude, longitude } = query;
   console.log(`latitude: ${latitude}, longitude: ${longitude}`);
   try {
-    const currentWeather = createDummyWeatherData();
-    const location = createDummyLocationData();
-    const futureWeather = createFutureWeatherData();
-    const severeAlerts = createDummySevereAlertsData();
-    res.json({
-      id: uuidv4(),
-      location,
-      currentWeather,
-      futureWeather,
-      severeAlerts,
-    });
+    const result = await getDummyWeatherData();
+    res.json(result);
   } catch (err) {
     console.error(err);
     res.status(500).send("Error retrieving data");
