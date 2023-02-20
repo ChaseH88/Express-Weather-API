@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const {
   celsiusToFahrenheit,
   centimetersToInches,
@@ -28,6 +29,7 @@ class WeatherDay {
     high_temp = null,
     low_temp = null,
   }) {
+    this.id = uuidv4();
     this.cloud_cover = `${cloud_cover}%`;
     this.air_quality = `${air_quality} AQI`;
     this.dew_point = `${Math.round(celsiusToFahrenheit(dew_point))} °F`;
