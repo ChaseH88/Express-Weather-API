@@ -39,6 +39,15 @@ GET /?latitude=37.7749&longitude=-122.4194
 X-API-Key: a1b2c3d4-e5f6-4f53-8f12-8e7a94c61b36
 ```
 
+### Dummy Location
+You can use the following endpoint to get dummy data back from the API. This is good during development when you don't want to make a lot of API calls to Mapbox and OpenWeather.
+
+```
+GET /dummy?latitude=37.7749&longitude=-122.4194
+X-API-Key: a1b2c3d4-e5f6-4f53-8f12-8e7a94c61b36
+```
+
+
 # Development
 
 ## Setting Up the Server/API
