@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("apikeys.db");
 const cors = require("cors");
+const morgan = require("morgan");
 const { getWeatherData, getDummyWeatherData } = require("./api/weather-data");
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(
     origin: "*",
   })
 );
+app.use(morgan(":method :url :status :response-time ms"));
 
 // Create the apikeys table if it doesn't exist
 db.run(`CREATE TABLE IF NOT EXISTS apikeys (email TEXT PRIMARY KEY, key TEXT)`);
@@ -88,9 +90,7 @@ app.get("/", async ({ query }, res) => {
 /**
  * Dummy endpoint for testing
  */
-app.get("/dummy", async ({ query }, res) => {
-  const { latitude, longitude } = query;
-  console.log(`latitude: ${latitude}, longitude: ${longitude}`);
+app.get("/dummy", async (_req, res) => {
   try {
     const result = await getDummyWeatherData();
     res.json(result);
