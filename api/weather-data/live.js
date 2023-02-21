@@ -7,6 +7,10 @@ const {
 const { transformData } = require("../../transformers/transform-data");
 
 const getWeatherData = async (latitude, longitude) => {
+  if (!latitude || !longitude) {
+    throw new Error("Latitude and longitude are required");
+  }
+
   const locationDataPromise = withCache(
     `${latitude},${longitude}`,
     async () => {
